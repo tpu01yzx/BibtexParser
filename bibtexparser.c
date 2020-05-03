@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <io.h>
-#include <string.h>
-#include <stdarg.h>
 #include "bibtexparser.h"
 
 static char strErr[STR_ERR_LEN];
@@ -13,12 +8,11 @@ BIB_FILE bib_fopen(const char * path)
 	int ci;
 	char c;
 	char *buffer = NULL;
-	char open,nest;
+	char nest;
 	int p = 0;
 	bool isType, isBody, isNewEntity, isRegular;
 	int nBracket;
 	FILE *file = NULL;
-	int nEntity = 0;
 
 	BIB_ENTITY_RAW *be = NULL;
 	BIB_ENTITY_RAW *head = NULL, *tail = NULL;
@@ -31,7 +25,10 @@ BIB_FILE bib_fopen(const char * path)
 		return NULL;
 	}
 
-	flen = filelength(fileno(file));
+	fseek(file, 0, SEEK_END);
+	flen = ftell(file);
+	rewind(file);
+
 	buffer = (char *)malloc(flen);
 	if(buffer == NULL) {
 		bib_log("Cannot allocate %d bytes memory.", flen);
@@ -40,7 +37,7 @@ BIB_FILE bib_fopen(const char * path)
 	//puts("file is opened.");
 	c = 0; ci = 0;
 	isType = false; isBody = false; isRegular = false;
-	nBracket = 0; open = 0; nest = 0;
+	nBracket = 0; nest = 0;
 	p = 0; isNewEntity = false;
 	while(ci!=EOF) {
 		ci=fgetc(file); c = ci & 0xff;
@@ -61,7 +58,6 @@ BIB_FILE bib_fopen(const char * path)
 					//begin body
 					if(ISOPENCH(c)) {
 						//puts("find a block body."); 
-						open = c;
 						nest = CLOSECH(c);
 						nBracket = 0; isBody = true; isType = false;
 					} 
@@ -133,7 +129,7 @@ BIB_FILE bib_fopen(const char * path)
 			
 			p = 0;				
 			isType = false; isBody = false; isNewEntity = false; isRegular = false;
-			nBracket = 0; open = '\0'; nest = '\0';
+			nBracket = 0; nest = '\0';
 			//memset(buffer, 0, flen);
 			if(c == '@') {				
 				isRegular = true; isType = true; isBody = false;
@@ -254,7 +250,6 @@ int bib_itype(const char * type)
 // a type and a key is consist of "a-zA-Z0-9-_"
 char *bib_token(char **praw, int type)
 {
-	static char open = 0;
 	static char nest = 0;
 	static bool hasValue = false;
 	char *raw;
@@ -280,7 +275,6 @@ char *bib_token(char **praw, int type)
 			if(c) {*raw1 = c0;}
 			bib_log("Expect a { or ( for VT_TYPE."); return NULL;
 		} else {
-			open = c;
 			nest= CLOSECH(c);
 		}
 	} else if(type == VT_KEY) {
@@ -360,7 +354,6 @@ BIB_ENTITY *bib_parse_entity(BIB_ENTITY_RAW *entity)
 {	
 	char *raw, *raw0;
 	char *buffer;
-	int kvlen;
 	int tlen;
 	BIB_ENTITY *be = NULL;
 	BIB_FIELD *one = NULL, *tail = NULL;
@@ -368,7 +361,7 @@ BIB_ENTITY *bib_parse_entity(BIB_ENTITY_RAW *entity)
 	bib_errclr();
 	if(entity == NULL) return NULL;
 	raw = entity->buf;
-	kvlen = entity->len;
+
 	be = (BIB_ENTITY *)malloc(sizeof(BIB_ENTITY));
 	if(be == NULL) {
 		bib_log("Cannot allocate %d bytes memory for BIB_ENTITY.", sizeof(BIB_ENTITY));

@@ -1,9 +1,20 @@
 #ifndef BIBTEX_PARSER_H
 #define BIBTEX_PARSER_H
+//#ifdef  _MSC_VER
+//#include <io.h>
+//#else
+//#include <sys/io.h>
+//#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 
+#ifndef __cplusplus
 typedef char bool;
 #define true  1
 #define false 0
+#endif
 
 #define STR_ERR_LEN	(1024)
 #define STR_TYPE_LEN	(32)
@@ -21,7 +32,6 @@ typedef char bool;
 #define ISQUOTA(c) ((c == '{' || c == '}'))
 #define CLOSECH(c) (c=='('?')':'}')
 
-#define BIB_FREE(p) {if(p){free(p);}}
 #define BTE_UNKNOWN (0)
 #define BTE_COMMENT (1)
 #define BTE_PREAMBLE (2)
@@ -44,10 +54,14 @@ typedef char bool;
 #define BTE_TECHREPORT			(BTE_REGULAR+11)
 #define BTE_UNPUBLISHED			(BTE_REGULAR+12)
 
-
-
-#define snprintf _snprintf
+#if defined(_MSC_VER) && (_MSC_VER < 1500)
 #define vsnprintf _vsnprintf
+#endif
+
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#define snprintf _snprintf
+#endif
+
 
 typedef unsigned char uchar;
 
@@ -80,8 +94,6 @@ int bib_itype(const char * type);
 BIB_ENTITY *bib_parse_entity(BIB_ENTITY_RAW *entity);
 void bib_free_entity(BIB_ENTITY *bib_entity);
 bool bib_isempty_entity(char *raw);
-
-
 
 char *bib_errstr();
 void bib_errclr();

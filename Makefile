@@ -70,11 +70,11 @@ LDFLAGS   =
 
 # The directories in which source files reside.
 # If not specified, only the current directory will be serached.
-SRCDIRS   =
+SRCDIRS   = .
 
 # The executable file name.
 # If not specified, current directory name or `a.out' will be used.
-PROGRAM   =
+PROGRAM   = bib_combiner
 
 ## Implicit Section: change the following only when necessary.
 ##==========================================================================
@@ -92,16 +92,16 @@ CFLAGS  = -g -O2
 CXXFLAGS= -g -O2
 
 # The C program compiler.
-#CC     = gcc
+CC     = gcc
 
 # The C++ program compiler.
-#CXX    = g++
+CXX    = g++
 
 # Un-comment the following line to compile C programs as C++ ones.
 #CC     = $(CXX)
 
 # The command used to delete file.
-#RM     = rm -f
+RM     = rm -f
 
 ETAGS = etags
 ETAGSFLAGS =

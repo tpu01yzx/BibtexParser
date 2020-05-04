@@ -79,6 +79,7 @@ int main(int argc, char *argv[])
 			if(be->type >= BTE_REGULAR) {
 				cnt_dist++;	
 				if(be->key) {
+					bib_toupr(be->key, be->key, strlen(be->key));
 					err_hash = hashmap_get(bibmap, be->key, NULL); 
 					if(err_hash == MAP_MISSING){//check if it is duplicated.	
 						err_hash = hashmap_put(bibmap, be->key, NULL);

@@ -23,6 +23,8 @@ typedef char bool;
 #define EC_ENT_0	(0)
 #define EC_ENT_1	(1)
 #define EC_ENT_2	(2)
+//four spaces for a tab char.
+#define TABSTR "    "
 
 #define ISKEYCH(c) ((c>= '0' && c<='9') || (c>= 'a' && c<='z') || (c>= 'A' && c<='Z') || (c == '-') || (c=='_'))
 #define ISTYPECH(c) ISKEYCH(c)

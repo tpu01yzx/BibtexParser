@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
 			isOutputplain = true;
 		} else if(argv[i][0] == '-') {			
 			printf("The only available options are: \n"
-				"\t-O --output if this option is not given, then stdout is used.\n"
-				"\t--onlyregular default is false. if onlyregular is true, then outputplain is set to false.\n"
-				"\t--outputplain default is false.\n");
+				TABSTR"-O --output if this option is not given, then stdout is used.\n"
+				TABSTR"--onlyregular default is false. if onlyregular is true, then outputplain is set to false.\n"
+				TABSTR"--outputplain default is false.\n");
 			return -3;
 		}		
 	}
@@ -79,8 +79,9 @@ int main(int argc, char *argv[])
 			if(be->type >= BTE_REGULAR) {
 				cnt_dist++;	
 				if(be->key) {
+					bib_toupr(be->key, be->key, strlen(be->key));
 					err_hash = hashmap_get(bibmap, be->key, NULL); 
-					if(err_hash == MAP_MISSING){//check if it is duplicated.	
+					if(err_hash == MAP_MISSING){//check if it is duplicated.						
 						err_hash = hashmap_put(bibmap, be->key, NULL);
 						if(err_hash == MAP_OK){
 							OutputFormat(fout, be);	cnt_wrt++;							
@@ -141,7 +142,7 @@ void OutputFormat(FILE *f, BIB_ENTITY *be)
 	bef = be->fields;
 	while(bef) {
 		if(bef->name) {
-			fprintf(f, "\t%s", bef->name);		
+			fprintf(f, TABSTR"%s", bef->name);		
 			if(bef->value) {
 				fprintf(f, " = %s", bef->value);
 			}

@@ -24,4 +24,5 @@ where ... denote any control characters such as ' ', '\t', '\r', '\n'.
 We write this program to show that this bibparser should work correctly. However, any bug report is welcomed.
 
 # About the compilation
-We use MSVC along with a C89 complier. It is expected that someone would rewrite this project to run on many platforms. To do this, you may modify the header file where some macro definitions or functions should be replaced by different compliers.
+1) For MSVC along with a C89 complier, please use the MSVC workspace file "BibtexParser.dsw"; We had tested that source files are ok in Windows 10 with VC 6.0.
+2) For gcc along with a C, please use the Makefile. We had tested that source files are ok in ubuntu18.04 (WSL) with gcc 7.5.0.
